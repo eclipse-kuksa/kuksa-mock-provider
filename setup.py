@@ -18,7 +18,7 @@ PKG_VERSION = "v0.1.0"
 pkg_packages = find_packages()
 
 setup(
-    name="mock_service",
+    name="mock_provider",
     packages=pkg_packages,
     version=PKG_VERSION,
     classifiers=["License :: OSI Approved :: Apache Software License"],

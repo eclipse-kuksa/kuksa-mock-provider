@@ -1,8 +1,10 @@
-# Vehicle Mock Service
+# KUKSA Mock Provider
+
+![KUKSA Logo](./doc/img/logo.png)
 
 ## About
 
-The vehicle mock service is a service dummy allowing to control all specified actuator- and sensor-signals via a configuration file. These configuration files are expressed in a Python-based [domain-specific language (DSL)](./doc/pydoc/mocking-dsl.md).
+The KUKSA Mock Provider is a service dummy allowing to control all specified actuator- and sensor-signals via a configuration file. These configuration files are expressed in a Python-based [domain-specific language (DSL)](./doc/pydoc/mocking-dsl.md).
 
 ## Why
 
@@ -24,7 +26,19 @@ flowchart LR
     ValIF <--> id3
 ```
 
-# Running mockservice
+## Running Mock Provider
+
+The Kuksa Mock Provider will try to connect to a KUKSA Databroker.
+Before starting the Mock Provider you must start a compatible version of the
+[KUKSA Databroker](https://github.com/eclipse/kuksa.val/tree/master/kuksa_databroker).
+If the Databroker is not reachable on `127.0.0.1:55555` you must specify IP and Port when starting
+the Mock provider.
+The Mock provider does not have support for TLS and Token authorization,
+so you cannot connect to a Databroker requiring TLS or Authorization.
+
+The [default mock](mock/mock.py) contains VSS signals that must exist in the VSS catalog loaded
+by the Databroker. As of today VSS 3.0 onwards shall match the default mock in this repository.
+
 
 Firstly, you will need to install all necessary Python dependencies by issuing the following command in your favorite terminal:
 
@@ -35,22 +49,47 @@ python3 -m pip install -r ./requirements.txt
 You can then run the vehicle mock service with
 
 ```bash
-python3 mockservice.py
+python3 mockprovider.py
 ```
 
-As an alternative, you can build and execute the container from the [Dockerfile](./Dockerfile) or through the [docker-build.sh](./docker-build.sh) script.
+### Running with Docker
 
-Another option, when using VS Code, is to use the [provided VSCode task](../.vscode/tasks.json) `run-mockservice` which will set up all necessary environment variables and parameters for the service to start up properly.
+As an alternative, you can build and execute the container from the [Dockerfile](./Dockerfile).
+
+```bash
+$ docker build -f Dockerfile -t mock-provider:latest .
+$ docker run --net=host mock-provider:latest                                                                                                                                     
+INFO:mock_service:Initialization ...                                                                                                                                                                               
+INFO:mock_service:Connecting to Data Broker [127.0.0.1:55555]
+INFO:kuksa_client.grpc:No Root CA present, it will not be possible to use a secure connection!
+...
+```
+
+### Running with Devcontainer
+
+A decontainer is provided. To run you must first install dependencies.
+
+```bash
+vscode ➜ /workspaces/kuksa-mock-provider  $ python3 -m pip install -r ./requirements.txt
+Defaulting to user installation because normal site-packages is not writeable
+Processing /workspaces/kuksa-mock-provider
+...
+vscode ➜ /workspaces/kuksa-mock-provider  $ python3 mockprovider.py
+INFO:mock_service:Initialization ...
+INFO:mock_service:Connecting to Data Broker [127.0.0.1:55555]
+INFO:kuksa_client.grpc:No Root CA present, it will not be possible to use a secure connection!
+...
+```
 
 ## Configuration
 
-### Vehicle Mock Service
+### KUKSA Mock Provider
 
 | parameter      | default value         | Environment variable               | description                     |
 |----------------|-----------------------|----------------------------------------------------------------------------------|---------------------------------|
 | listen address | `"127.0.0.1:50053"`   | `MOCK_ADDR`                                                                      | Listen for rpc calls            |
-| broker address | `"127.0.0.1:55555"`   | if DAPR_GRPC_PORT is set:<br>`"127.0.0.1:$DAPR_GRPC_PORT"` <br>else:<br> `VDB_ADDRESS`| The address of the KUKSA.val databroker to connect to |
-| broker app id  | `"vehicledatabroker"` | `VEHICLEDATABROKER_DAPR_APP_ID`                                                  | When using DAPR, this allows to configure the id of the KUKSA.val databroker to connect to. |
+| broker address | `"127.0.0.1:55555"`   | `VDB_ADDRESS`| The address of the KUKSA.val databroker to connect to |
+
 
 Configuration options have the following priority (highest at top):
 1. environment variable
@@ -74,7 +113,7 @@ If the mocked datapoints are not enough, the `mock.py` in this repository can be
 
 The full Python mocking DSL is available [here](./doc/pydoc/mocking-dsl.md)
 
-# Running showcase GUI
+# Running showcase GUI 
 
 Firstly, you will need to install all necessary Python dependencies by using the following command in your favorite terminal:
 
@@ -83,7 +122,7 @@ Firstly, you will need to install all necessary Python dependencies by using the
 python3 -m pip install -r ./requirements.txt
 ```
 
-To run the GUI do the following in your favourtie terminal:
+To run the GUI do the following in your favorite terminal:
 
 ```bash
 python3 showcase_gui/GUI.py

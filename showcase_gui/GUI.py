@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 # /********************************************************************************
 # * Copyright (c) 2022 Contributors to the Eclipse Foundation
 # *
@@ -14,6 +15,7 @@
 import argparse
 import threading
 
+import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -25,14 +27,15 @@ from kuksa_client.grpc import Datapoint
 from kuksa_client.grpc import EntryType
 
 from mock.mockservice import MockService
+from mock import mock
 from lib.dsl import (
     create_animation_action,
     create_behavior,
     create_set_action,
     get_datapoint_value,
     mock_datapoint,
-    create_event_trigger
-)
+    create_event_trigger,
+    _mocked_datapoints)
 from lib.trigger import ClockTrigger, EventType
 from lib.animator import RepeatMode
 from lib.behavior import Behavior
@@ -547,13 +550,15 @@ class GUIApp:
                         print("Something wrong!")
 
     def mainloop(self):
-        mock = MockService("127.0.0.1:50053")
 
+        VDB_ADDRESS = os.getenv("VDB_ADDRESS", "127.0.0.1:55555")
+        mock2 = MockService("127.0.0.1:50053", VDB_ADDRESS)
+        print("Loaded " +  str(len(_mocked_datapoints)) + " mocked datapoints")
         # GUI elements to add dynamically
         button = ttk.Button(root, text="Add Element", command=app.show_popup)
         app.elements.append(button)
         app.update_layout()
-        Mock = threading.Thread(target=mock.main_loop)
+        Mock = threading.Thread(target=mock2.main_loop)
         Mock.start()
         print("Mock started ...")
         while True:
