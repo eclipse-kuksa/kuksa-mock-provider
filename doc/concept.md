@@ -44,10 +44,10 @@ The scope of the Vehicle Mock is a CLI application without a GUI and without phy
 | #F10.2.1 | post-MVP | non-looping
 | #F10.2.2 | post-MVP | reset after play, play again
 | #F10.2.3 | post-MVP | ping-pong (reverse play)
-| #F11 | MVP | Values in behavior conditions and target values shall support liteals to indicate the use of dynamic values: `$requested_value` for the requested value of an `actuator_target` event, `$Vehicle.Speed` for dynamic evaluation of the Vehicle's current speed. All VSS sensors and actuators shall be supported in the evaluation of dynamic values.
+| #F11 | MVP | Values in behavior conditions and target values shall support literals to indicate the use of dynamic values: `$requested_value` for the requested value of an `actuator_target` event, `$Vehicle.Speed` for dynamic evaluation of the Vehicle's current speed. All VSS sensors and actuators shall be supported in the evaluation of dynamic values.
 | #F12 | post-MVP | It shall be possible to re-load the configuration file at runtime via external trigger
 
-## Non-funtional requirements
+## Non-functional requirements
 
 | id | version | description |
 |:---|:-------:|:-----------|
@@ -149,14 +149,14 @@ mock_datapoints:
 
 ```
 
-### Class Diagarm
+### Class Diagram
 
 ```mermaid
 classDiagram
     class BaseService {
         Basic service responsible for
         establishing connection to
-        Dapr sidecar and VDB.
+        KUKSA Databroker.
         + connectToDatabroker()
     }
 

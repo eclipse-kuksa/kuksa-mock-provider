@@ -1,8 +1,10 @@
-# Vehicle Mock Service
+# KUKSA Mock Provider
+
+![KUKSA Logo](./doc/img/logo.png)
 
 ## About
 
-The vehicle mock service is a service dummy allowing to control all specified actuator- and sensor-signals via a configuration file. These configuration files are expressed in a Python-based [domain-specific language (DSL)](./doc/pydoc/mocking-dsl.md).
+The KUKSA Mock Provider is a service dummy allowing to control all specified actuator- and sensor-signals via a configuration file. These configuration files are expressed in a Python-based [domain-specific language (DSL)](./doc/pydoc/mocking-dsl.md).
 
 ## Why
 
@@ -24,7 +26,7 @@ flowchart LR
     ValIF <--> id3
 ```
 
-# Running mockservice
+# Running Mock Provider
 
 Firstly, you will need to install all necessary Python dependencies by issuing the following command in your favorite terminal:
 
@@ -35,22 +37,21 @@ python3 -m pip install -r ./requirements.txt
 You can then run the vehicle mock service with
 
 ```bash
-python3 mockservice.py
+python3 mockprovider.py
 ```
 
-As an alternative, you can build and execute the container from the [Dockerfile](./Dockerfile) or through the [docker-build.sh](./docker-build.sh) script.
+As an alternative, you can build and execute the container from the [Dockerfile](./Dockerfile).
 
-Another option, when using VS Code, is to use the [provided VSCode task](../.vscode/tasks.json) `run-mockservice` which will set up all necessary environment variables and parameters for the service to start up properly.
 
 ## Configuration
 
-### Vehicle Mock Service
+### KUKSA Mock Provider
 
 | parameter      | default value         | Environment variable               | description                     |
 |----------------|-----------------------|----------------------------------------------------------------------------------|---------------------------------|
 | listen address | `"127.0.0.1:50053"`   | `MOCK_ADDR`                                                                      | Listen for rpc calls            |
-| broker address | `"127.0.0.1:55555"`   | if DAPR_GRPC_PORT is set:<br>`"127.0.0.1:$DAPR_GRPC_PORT"` <br>else:<br> `VDB_ADDRESS`| The address of the KUKSA.val databroker to connect to |
-| broker app id  | `"vehicledatabroker"` | `VEHICLEDATABROKER_DAPR_APP_ID`                                                  | When using DAPR, this allows to configure the id of the KUKSA.val databroker to connect to. |
+| broker address | `"127.0.0.1:55555"`   | `VDB_ADDRESS`| The address of the KUKSA.val databroker to connect to |
+
 
 Configuration options have the following priority (highest at top):
 1. environment variable
@@ -83,7 +84,7 @@ Firstly, you will need to install all necessary Python dependencies by using the
 python3 -m pip install -r ./requirements.txt
 ```
 
-To run the GUI do the following in your favourtie terminal:
+To run the GUI do the following in your favorite terminal:
 
 ```bash
 python3 showcase_gui/GUI.py

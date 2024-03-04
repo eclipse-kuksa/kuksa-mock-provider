@@ -1,5 +1,5 @@
 # /********************************************************************************
-# * Copyright (c) 2022 Contributors to the Eclipse Foundation
+# * Copyright (c) 2023 Contributors to the Eclipse Foundation
 # *
 # * See the NOTICE file(s) distributed with this work for additional
 # * information regarding copyright ownership.
@@ -11,15 +11,21 @@
 # * SPDX-License-Identifier: Apache-2.0
 # ********************************************************************************/
 
-from setuptools import find_packages, setup
+FROM python:3.11
 
-PKG_VERSION = "v0.1.0"
 
-pkg_packages = find_packages()
+COPY . /tmp
 
-setup(
-    name="mock_service",
-    packages=pkg_packages,
-    version=PKG_VERSION,
-    classifiers=["License :: OSI Approved :: Apache Software License"],
-)
+WORKDIR /tmp
+
+RUN python3 -m pip install --no-cache-dir -r requirements.txt
+
+# useful dumps about feeding values
+ENV LOG_LEVEL="info,databroker=debug,mock_service=debug"
+
+# Vehicle Data Broker host:port
+#ENV VDB_ADDRESS="localhost:55555"
+
+ENV PYTHONUNBUFFERED=yes
+
+# ENTRYPOINT ["./mockservice.py"]

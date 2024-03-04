@@ -23,13 +23,7 @@ ENV LOG_LEVEL="info,databroker=debug,mock_service=debug"
 
 # Vehicle Data Broker host:port
 #ENV VDB_ADDRESS="localhost:55555"
-# Override VDB_ADDRESS port if set
-#ENV DAPR_GRPC_PORT="55555"
-# VDB DAPR APP ID
-ENV VEHICLEDATABROKER_DAPR_APP_ID=vehicledatabroker
 
 ENV PYTHONUNBUFFERED=yes
 
-LABEL org.opencontainers.image.source="https://github.com/eclipse/kuksa.val.services"
-
-CMD ["python3", "/mock/mockservice.py"]
+ENTRYPOINT ["./mockprovider.py"]

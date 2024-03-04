@@ -23,7 +23,6 @@ from kuksa_client.grpc import VSSClient
 
 log = logging.getLogger("mock_service")
 
-# VehicleDataBroker address, overridden if "DAPR_GRPC_PORT" is set in environment
 VDB_ADDRESS = os.getenv("VDB_ADDRESS", "127.0.0.1:55555")
 
 
@@ -47,11 +46,7 @@ class BaseService(ABC):
     def __init__(self, service_address: str, service_name: str, databroker_address: str = VDB_ADDRESS):
         super().__init__()
 
-        if os.getenv("DAPR_GRPC_PORT") is not None:
-            grpc_port = os.getenv("DAPR_GRPC_PORT")
-            self._vdb_address = f"127.0.0.1:{grpc_port}"
-        else:
-            self._vdb_address = databroker_address
+        self._vdb_address = databroker_address
         self._address = service_address
         self._service_name = service_name
         self._connected = False
@@ -66,14 +61,7 @@ class BaseService(ABC):
 
     def _connect_to_databroker(self) -> None:
         log.info("Connecting to Data Broker [%s]", self._vdb_address)
-        if os.getenv("VEHICLEDATABROKER_DAPR_APP_ID") is not None:
-            self._metadata = (
-                ("dapr-app-id", os.getenv("VEHICLEDATABROKER_DAPR_APP_ID")),
-            )
-            # give some time for dapr sidecar startup...
-            time.sleep(2)
-        else:
-            self._metadata = None
+        self._metadata = None
         self._client.connect()
         self._connected = True
         self.on_databroker_connected()
@@ -86,7 +74,6 @@ class BaseService(ABC):
                 time.sleep(0.2)
                 continue
             else:
-                # TODO: check if dapr grpc proxy has active connection(e.g. send last temp value)
                 time.sleep(1)
 
     @abstractmethod

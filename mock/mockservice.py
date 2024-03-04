@@ -30,11 +30,13 @@ from lib.loader import PythonDslLoader
 from lib.types import Event
 from lib.action import AnimationAction
 from lib.dsl import _mocked_datapoints, _required_datapoint_paths
+# Import mock points that have been defined in mock.py
+from mock import mock   # noqa # pylint: disable=unused-import
 
 SERVICE_NAME = "mock_service"
 
 log = logging.getLogger(SERVICE_NAME)
-log.setLevel("INFO")
+log.setLevel(logging.INFO)
 
 # Create a file handler and set the log file name
 file_handler = logging.FileHandler("mock_service.log")
@@ -49,17 +51,11 @@ log.addHandler(file_handler)
 event = threading.Event()
 
 # Set the log level to suppress log messages because we call connect/disconnect of client quite often
-logging.getLogger("kuksa_client").setLevel(logging.WARNING)
-
-# Mock Service bind "host:port"
-MOCK_ADDRESS = os.getenv("MOCK_ADDR", "0.0.0.0:50053")
-VDB_ADDRESS = os.getenv("VDB_ADDRESS", "127.0.0.1:55555")
+logging.getLogger("kuksa_client").setLevel(logging.INFO)
 
 # Data point events from VDB
 EVENT_KEY_ACTUATOR_TARGET = "actuator_target"
 EVENT_KEY_VALUE = "value"
-
-log.info(_mocked_datapoints)
 
 
 class MockService(BaseService):
@@ -67,7 +63,7 @@ class MockService(BaseService):
     from mock.py and then simulated the programmed behavior of the mocked
     datapoints."""
 
-    def __init__(self, service_address: str, databroker_address: str = VDB_ADDRESS):
+    def __init__(self, service_address: str, databroker_address: str):
         log.info("Initialization ...")
         super().__init__(service_address, SERVICE_NAME, databroker_address)
         self._ids: Dict[str, Any] = dict()
@@ -115,6 +111,7 @@ class MockService(BaseService):
         # wait for datapoints to be registered
         while not self._registered:
             time.sleep(1)
+
         try:
             while True:
                 self.check_for_new_mocks()
@@ -167,7 +164,10 @@ class MockService(BaseService):
 
     def _subscribe_to_mocked_datapoints(self):
         """Subscribe to mocked datapoints."""
-        log.info("Subscribing to mocked datapoints...")
+        nbr_datapoints = len(_mocked_datapoints)
+        log.info("Subscribing to %d mocked datapoints...", nbr_datapoints)
+        log.debug(_mocked_datapoints)
+
         if self._mocked_datapoints:
             response_iter_target = self._client.subscribe_target_values(self._mocked_datapoints)
             response_iter_current = self._client.subscribe_current_values(self._mocked_datapoints)
@@ -193,18 +193,3 @@ class MockService(BaseService):
             log.warning("Feeding %s failed", path, exc_info=True)
             self._connected = is_grpc_fatal_error(err)
             raise err
-
-
-async def main():
-    """Main function"""
-    mock_service = MockService(MOCK_ADDRESS)
-    mock_service.main_loop()
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    log.setLevel(logging.DEBUG)
-    LOOP = asyncio.get_event_loop()
-    LOOP.add_signal_handler(signal.SIGTERM, LOOP.stop)
-    LOOP.run_until_complete(main())
-    LOOP.close()
