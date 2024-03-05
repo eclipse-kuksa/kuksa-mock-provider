@@ -42,7 +42,6 @@ python3 mockprovider.py
 
 As an alternative, you can build and execute the container from the [Dockerfile](./Dockerfile).
 
-
 ## Configuration
 
 ### KUKSA Mock Provider
