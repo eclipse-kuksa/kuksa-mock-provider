@@ -30,8 +30,8 @@ flowchart LR
 The Kuksa Mock Provider will try to connect to a KUKSA Databroker.
 Before starting the Mock Provider you must start a compatible version of the
 [KUKSA Databroker](https://github.com/eclipse/kuksa.val/tree/master/kuksa_databroker).
-If the Databroker is not reachable on `127.0.0.1:55555` you must specify IP and Port when starting
-the Mock provider.
+If the Databroker is reachable on a different address or port than `127.0.0.1:55555`,
+you must specify those address and port when starting the Mock provider - see "Configuration" section below.
 The Mock provider does not have support for TLS and Token authorization,
 so you cannot connect to a Databroker requiring TLS or Authorization.
 
