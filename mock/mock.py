@@ -11,6 +11,9 @@
 # * SPDX-License-Identifier: Apache-2.0
 # ********************************************************************************/
 
+from . import Cluster_Features_Vss
+from . import Vehicle_Health_Vss
+
 from lib.animator import RepeatMode
 from lib.dsl import (
     create_animation_action,
@@ -22,20 +25,22 @@ from lib.dsl import (
 )
 from lib.trigger import ClockTrigger, EventType
 
-mock_datapoint(
-    path="Vehicle.Speed",
-    initial_value=0.0,
-    behaviors=[
-        create_behavior(
-            trigger=ClockTrigger(0),
-            action=create_animation_action(
-                duration=10.0,
-                repeat_mode=RepeatMode.REPEAT,
-                values=[0, 30.0, 50.0, 70.0, 100.0, 70.0, 50.0, 30.0, 0.0],
-            ),
-        )
-    ],
-)
+
+#mock_datapoint(
+#    path="Vehicle.Speed",
+#    initial_value=0.0,
+#    behaviors=[
+#        create_behavior(
+#            trigger=ClockTrigger(0),
+#            action=create_animation_action(
+#                duration=10.0,
+#                repeat_mode=RepeatMode.REPEAT,
+#                values=[0, 30.0, 50.0, 70.0, 100.0, 70.0, 50.0, 30.0, 0.0],
+#            ),
+#        )
+#    ],
+#)
+
 
 mock_datapoint(
     path="Vehicle.Body.Windshield.Front.Wiping.System.Mode",
@@ -131,3 +136,7 @@ mock_datapoint(
         ),
     ],
 )
+
+
+
+
