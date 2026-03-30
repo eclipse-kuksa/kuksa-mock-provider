@@ -24,7 +24,7 @@ ply==3.11
     # via jsonpath-ng
 protobuf==5.29.5
     # via grpcio-tools
-pygments==2.18.0
+pygments==2.20.0
     # via kuksa-client
 pyperclip==1.9.0
     # via cmd2
