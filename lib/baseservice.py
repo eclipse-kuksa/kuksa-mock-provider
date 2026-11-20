@@ -88,4 +88,4 @@ class BaseService(ABC):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback) -> None:
-        asyncio.run_coroutine_threadsafe(self.close(), asyncio.get_event_loop())
+        asyncio.run(self.close())

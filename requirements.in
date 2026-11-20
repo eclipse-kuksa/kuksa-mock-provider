@@ -1,2 +1,7 @@
-scipy>=1.10.1
-kuksa_client>=0.4.3
+# scipy 1.16.1+ has cp314 wheels; 1.18+ requires Python 3.12
+scipy>=1.16.1,<1.18
+# Used directly by lib/animator.py; 2.5+ requires Python 3.12
+numpy>=2.3.2,<2.5
+kuksa_client>=0.6.0
+# CVE-2026-4539 fixed in 2.20.0 (transitive via kuksa-client)
+pygments>=2.20.0

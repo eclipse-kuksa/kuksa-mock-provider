@@ -43,7 +43,8 @@ async def main():
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     log.setLevel(logging.DEBUG)
-    LOOP = asyncio.get_event_loop()
+    LOOP = asyncio.new_event_loop()
+    asyncio.set_event_loop(LOOP)
     LOOP.add_signal_handler(signal.SIGTERM, LOOP.stop)
     LOOP.run_until_complete(main())
     LOOP.close()

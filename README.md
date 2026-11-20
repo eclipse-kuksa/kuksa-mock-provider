@@ -38,6 +38,8 @@ so you cannot connect to a Databroker requiring TLS or Authorization.
 The [default mock](mock/mock.py) contains VSS signals that must exist in the VSS catalog loaded
 by the Databroker. As of today VSS 3.0 onwards shall match the default mock in this repository.
 
+Python 3.11 or newer is required.
+
 Firstly, you will need to install all necessary Python dependencies by issuing the following command in your favorite terminal:
 
 ```bash

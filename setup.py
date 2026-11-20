@@ -21,5 +21,6 @@ setup(
     name="mock_provider",
     packages=pkg_packages,
     version=PKG_VERSION,
+    python_requires=">=3.11",
     classifiers=["License :: OSI Approved :: Apache Software License"],
 )
