@@ -14,6 +14,7 @@
 import logging
 from typing import Any, Callable, Dict, List, Optional
 
+from lib.DiscreteAnimator import Repeat_Mode 
 from lib.action import Action, ActionContext, AnimationAction, SetAction
 from lib.animator import RepeatMode
 from lib.behavior import Behavior, ExecutionContext
@@ -39,10 +40,10 @@ def mock_datapoint(path: str, initial_value: Any, behaviors: List[Behavior] = No
     path_exists = any("path" in d and d["path"] == path for d in _mocked_datapoints)
     if not path_exists:
         _mocked_datapoints.append(
-            {"path": path, "initial_value": initial_value, "behaviors": behaviors}
+        {"path": path, "initial_value": initial_value, "behaviors": behaviors}
         )
-    else:
-        log.error("Datapoint already mocked please add behavior instead")
+#    else:
+#        log.error("Datapoint already mocked please add behavior instead")
 
 
 def create_behavior(
@@ -224,3 +225,37 @@ def delete_all_mocked_datapoints():
     """Delete all mocked datapoints from the mock
     """
     _mocked_datapoints.clear()
+    
+
+def create_discrete_animation_action(
+    values: List[Any], duration: float, repeat_mode: RepeatMode = RepeatMode.ONCE
+) -> AnimationAction:
+    """Create a Discrete AnimationAction for animating discrete values.
+
+    Args:
+        values (List[Any]): The list of discrete values to animate over.
+        duration (float): The total duration of the animation in seconds.
+        repeat_mode (RepeatMode, optional): The repeat mode of the animation. Defaults to RepeatMode.ONCE.
+
+    Returns:
+        AnimationAction: The created AnimationAction configured for discrete values.
+    """
+    return AnimationAction(duration, repeat_mode, values, __resolve_discrete_value)
+
+
+def __resolve_discrete_value(context: ActionContext, value: Any) -> Any:
+    """Resolves discrete values dynamically at runtime.
+    
+    Args:
+        context (ActionContext): The context in which the action is triggered.
+        value (Any): The discrete value to resolve.
+
+    Returns:
+        Any: The resolved value.
+    """
+    return value  # Since discrete values don’t interpolate, return as-is
+
+    
+    
+    
+    

@@ -31,7 +31,7 @@ logging.getLogger("kuksa_client").setLevel(logging.INFO)
 
 # Mock Service bind "host:port"
 MOCK_ADDRESS = os.getenv("MOCK_ADDR", "0.0.0.0:50053")
-VDB_ADDRESS = os.getenv("VDB_ADDRESS", "127.0.0.1:55555")
+VDB_ADDRESS = os.getenv("VDB_ADDRESS", "0.0.0.0:55555")
 
 
 async def main():

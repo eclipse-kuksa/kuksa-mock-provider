@@ -15,6 +15,7 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Any, Callable, List, Optional, NamedTuple
 
+from lib.DiscreteAnimator import DiscreteAnimator, Repeat_Mode
 from lib.animator import Animator, RepeatMode, ValueAnimator
 from lib.datapoint import DataPoint
 from lib.trigger import TriggerResult
@@ -83,22 +84,40 @@ class AnimationAction(Action):
                 context, self._values[i]
             )
 
-    def execute(
-        self,
-        action_context: ActionContext,
-    ):
-        if not action_context.datapoint.has_discrete_value_type():
-            if self._target_value_resolver is not None:
-                self._resolve_target_values(action_context)
-
-            self._animator = ValueAnimator(
-                self._resolved_values,
-                self._duration,
-                self._repeat_mode,
-                lambda x: action_context.datapoint.set_value(x),
+#    def execute(
+#        self,
+#        action_context: ActionContext,
+#    ):
+#        if not action_context.datapoint.has_discrete_value_type():
+#            if self._target_value_resolver is not None:
+#                self._resolve_target_values(action_context)
+#
+#            self._animator = ValueAnimator(
+#                self._resolved_values,
+#                self._duration,
+#                self._repeat_mode,
+#                lambda x: action_context.datapoint.set_value(x),
+#            )
+#        else:
+#            log.error("Datapoint for animation has discrete value")
+    def execute(self, action_context: ActionContext):
+        if action_context.datapoint.has_discrete_value_type():
+#            log.error("Datapoint for animation has discrete value")
+            self._animator = DiscreteAnimator(
+                    self._resolved_values,
+                    self._duration,
+                      self._repeat_mode,
+                    lambda x: action_context.datapoint.set_value(x),
             )
         else:
-            log.error("Datapoint for animation has discrete value")
+             if self._target_value_resolver is not None:
+                    self._resolve_target_values(action_context)
+                    self._animator = ValueAnimator(
+                        self._resolved_values,
+                        self._duration,
+                        self._repeat_mode,
+                        lambda x: action_context.datapoint.set_value(x),
+                    )
 
     def __eq__(self, other) -> bool:
         return (
